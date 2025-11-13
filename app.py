@@ -1,4 +1,12 @@
 # app.py — Enhanced & Polished Netflix Dashboard (full file)
+
+DF_PATH = "netflix_titles.csv"
+try:
+    df = pd.read_csv(DF_PATH)
+except Exception as e:
+    st.error(f"Could not load {DF_PATH}: {e}")
+    st.stop()
+
 import pandas as pd
 import plotly.express as px
 import streamlit as st
