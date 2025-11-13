@@ -15,8 +15,6 @@ This project transforms the raw Netflix dataset into an accessible and visually 
 
 ## [🚀 **Live Demo**](https://madebydeep-netflix-dashboard-app-atnqhb.streamlit.app/)
 
----
-
 ## 📊 **Features**
 
 ### 🔎 **1. Smart Filtering & Search**
@@ -123,7 +121,7 @@ It includes:
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/netflix_dashboard.git
+git clone https://github.com/madebydeep/netflix_dashboard.git
 cd netflix_dashboard
 ```
 
@@ -160,23 +158,11 @@ The focus is on simplicity and usability while preserving visual richness.
 ```
 📁 netflix_dashboard
 │── app.py               # Main Streamlit app
-│── netflix_titles.csv   # Dataset (or upload separately on Streamlit Cloud)
+│── netflix_titles.csv   # Dataset
 │── requirements.txt     # Dependencies
 │── README.md            # Project documentation
 └── .gitignore
 ```
-
----
-
-## ✨ **Future Improvements**
-
-Planned enhancements:
-
-* Add clustering (K-Means) based on descriptions
-* Add word-cloud visualization for movie summaries
-* Introduce user ratings (if dataset supports it)
-* Multi-year trend analysis
-* Actor & director collaboration networks
 
 ---
 
