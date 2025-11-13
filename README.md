@@ -15,8 +15,7 @@ This project transforms the raw Netflix dataset into an accessible and visually 
 
 ## 🚀 **Live Demo**
 
-*(Add your Streamlit Cloud deployment link here once deployed)*
-👉 **Live App:** *Coming Soon*
+*(https://madebydeep-netflix-dashboard-app-atnqhb.streamlit.app/)*
 
 ---
 
@@ -144,17 +143,6 @@ streamlit run app.py
 
 ---
 
-## 🌐 **Deploying on Streamlit Cloud**
-
-1. Push the repository to GitHub
-2. Go to [https://share.streamlit.io](https://share.streamlit.io)
-3. Select your repo
-4. Choose `app.py` as the entry file
-5. Upload your `netflix_titles.csv` under “Files”
-6. Deploy 🚀
-
----
-
 ## 🎨 **Design Philosophy**
 
 This dashboard uses:
@@ -197,7 +185,7 @@ Planned enhancements:
 ## 👨‍💻 **Author**
 
 **Deep Singh**
-🔗 GitHub: [https://github.com/deepcodedthat](https://github.com/deepcodedthat)
+🔗 GitHub: [https://github.com/madebydeep](https://github.com/madebydeep)
 💼 Portfolio: *Coming Soon*
 
 If you like this project, consider starring ⭐ the repository!
@@ -208,10 +196,3 @@ If you like this project, consider starring ⭐ the repository!
 
 This project is licensed under the **MIT License** — free for personal and commercial use.
 
----
-
-If you'd like, I can also generate:
-✅ A banner for the README
-✅ A logo for the dashboard
-✅ A more detailed walkthrough section
-Just tell me!
