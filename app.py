@@ -1,11 +1,5 @@
 # app.py — Enhanced & Polished Netflix Dashboard (full file)
 
-DF_PATH = "netflix_titles.csv"
-try:
-    df = pd.read_csv(DF_PATH)
-except Exception as e:
-    st.error(f"Could not load {DF_PATH}: {e}")
-    st.stop()
 
 import pandas as pd
 import plotly.express as px
@@ -13,6 +7,12 @@ import streamlit as st
 from io import StringIO
 from plotly.colors import qualitative, sequential
 
+DF_PATH = "netflix_titles.csv"
+try:
+    df = pd.read_csv(DF_PATH)
+except Exception as e:
+    st.error(f"Could not load {DF_PATH}: {e}")
+    st.stop()
 # ---------- Page config ----------
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
 st.markdown("<h1 class='big-title'>🎬 Netflix Dashboard</h1>", unsafe_allow_html=True)
