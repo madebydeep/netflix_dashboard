@@ -134,27 +134,78 @@ section[data-testid='stSidebar'] button {
 
 
 # ---------- Load dataset ----------
-DF_PATH = "netflix_titles.csv"
-df = pd.read_csv(DF_PATH)
+df = pd.read_csv(DF_PATH, low_memory=False)
 
-# ---------- Clean / normalize columns ----------
-# Country
-df['country'] = df.get('country', pd.Series(['Unknown'] * len(df))).fillna('Unknown').astype(str)
-df['country'] = df['country'].str.strip().apply(lambda x: x.lstrip(',').strip())
-# keep first country for filtering
-df['country'] = df['country'].apply(lambda x: x.split(',')[0].strip() if x and x.lower() != 'nan' else 'Unknown')
+# ---------- Robust Input Cleaning / Normalization ----------
+# Helper: normalize text fields: convert to str, strip whitespace, replace empty with 'Not Available'
+def clean_text_column(series, na_replace="Not Available"):
+    # convert to string first to avoid errors, keep NaNs separate
+    series = series.where(series.notna(), None)
+    def _clean(x):
+        if x is None:
+            return na_replace
+        s = str(x).strip()
+        if s == "" or s.lower() in ("nan", "none", "na", "n/a"):
+            return na_replace
+        return s
+    return series.map(_clean)
 
-# Genres (listed_in)
-df['listed_in'] = df.get('listed_in', pd.Series(['Unknown'] * len(df))).fillna('Unknown').astype(str)
-df['listed_in'] = df['listed_in'].apply(lambda s: ', '.join([g.strip() for g in s.split(',')]) if s else 'Unknown')
+# Columns we expect and how to normalize them:
+text_cols_defaults = {
+    'title': "Not Available",
+    'director': "Not Available",
+    'cast': "Not Available",
+    'country': "Unknown",
+    'listed_in': "Not Available",
+    'rating': "Not Available",
+    'type': "Not Available",
+    'description': "Not Available",
+    'date_added': None,  # handled separately
+}
 
-# Cast and director columns
-df['cast'] = df.get('cast', pd.Series([''] * len(df))).fillna('').astype(str)
-df['director'] = df.get('director', pd.Series([''] * len(df))).fillna('').astype(str)
+# Ensure columns exist (add missing cols with default values)
+for c, default in text_cols_defaults.items():
+    if c not in df.columns:
+        # create column full of NaN so the cleaner can handle it
+        df[c] = pd.NA
 
-# release_year numeric
-df['release_year'] = pd.to_numeric(df.get('release_year', pd.Series([pd.NA]*len(df))), errors='coerce')
+# Clean text columns
+for c, default in text_cols_defaults.items():
+    if c == 'date_added':
+        # we'll parse dates below
+        continue
+    df[c] = clean_text_column(df[c], na_replace=default)
 
+# Standardize listed_in (genres): ensure comma-separated, trimmed
+df['listed_in'] = df['listed_in'].apply(lambda s: ', '.join([g.strip() for g in str(s).split(',')]) if s and s != "Not Available" else "Not Available")
+
+# Country: there may be multiple countries — keep as-is trimmed, and create a 'primary_country' for filtering
+# Make sure ',' separators are normalized, then extract first as 'country' for filters
+df['country'] = df['country'].apply(lambda s: ', '.join([c.strip() for c in str(s).split(',')]) if s and s != "Unknown" else "Unknown")
+# primary_country for filtering (first country) — keep this separate to avoid losing original info
+df['primary_country'] = df['country'].apply(lambda x: x.split(',')[0].strip() if x and x != "Unknown" else "Unknown")
+
+# Cast and director: normalize separators and keep empty->Not Available already done
+df['cast'] = df['cast'].apply(lambda s: ', '.join([a.strip() for a in str(s).split(',')]) if s and s != "Not Available" else "Not Available")
+df['director'] = df['director'].apply(lambda s: ', '.join([d.strip() for d in str(s).split(',')]) if s and s != "Not Available" else "Not Available")
+
+# date_added -> parse to datetime; create year_added column
+df['date_added'] = df['date_added'].replace({"Not Available": pd.NA})
+df['date_added'] = pd.to_datetime(df['date_added'], errors='coerce', dayfirst=False)
+df['year_added'] = df['date_added'].dt.year.fillna(pd.NA).astype('Int64')
+
+# release_year -> coerce to numeric and fill NaNs with year_added where possible
+df['release_year'] = pd.to_numeric(df['release_year'], errors='coerce').astype('Int64')
+# if release_year is missing but year_added exists, use it as fallback
+mask_missing_release = df['release_year'].isna() & df['year_added'].notna()
+df.loc[mask_missing_release, 'release_year'] = df.loc[mask_missing_release, 'year_added']
+
+# final safety: if still missing, set to a sentinel (e.g., 0 or 1900); here we'll set to Int64 NA and handle later when plotting
+# (don't overwrite with a misleading year)
+# df['release_year'] remains Int64 with possible <NA>
+
+# Remove accidental unnamed index cols
+df = df.loc[:, ~df.columns.str.match(r'^Unnamed')]
 # ---------- Build filter lists ----------
 type_options = ["All"]
 if 'type' in df.columns:
