@@ -13,9 +13,7 @@ This project transforms the raw Netflix dataset into an accessible and visually 
 
 ---
 
-## 🚀 **Live Demo**
-
-*(https://madebydeep-netflix-dashboard-app-atnqhb.streamlit.app/)*
+## [🚀 **Live Demo**](https://madebydeep-netflix-dashboard-app-atnqhb.streamlit.app/)
 
 ---
 
