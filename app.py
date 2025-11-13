@@ -17,7 +17,7 @@ except Exception as e:
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
 st.markdown("<h1 class='big-title'>🎬 Netflix Dashboard</h1>", unsafe_allow_html=True)
 st.write("This dashboard lets you explore the Netflix catalog interactively using filters, charts, and summary metrics.\nYou can search by country, genre, type, title, or actors to instantly narrow down the dataset.\nEach section below highlights different aspects of Netflix content — such as what types of shows are most common, how releases changed over time, and which genres, directors, and actors dominate the platform.")
-st.write("Experience Multi-select filters, Release charts, Find top directors & actors, and download the filtered CSV.")
+st.caption("Experience Multi-select filters, Release charts, Find top directors & actors, and download the filtered CSV.")
 
 # ---------- Minimal CSS for polish ----------
 st.markdown(
