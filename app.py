@@ -7,7 +7,7 @@ import streamlit as st
 from io import StringIO
 from plotly.colors import qualitative, sequential
 
-DF_PATH = "https://github.com/madebydeep/netflix_dashboard/blob/main/netflix_titles.csv"
+DF_PATH = "https://raw.githubusercontent.com/madebydeep/netflix_dashboard/main/netflix_titles.csv"
 try:
     df = pd.read_csv(DF_PATH)
 except Exception as e:
